@@ -1,13 +1,13 @@
 package yet_another_goprof
 
 import (
+	"io"
+	"log"
 	"os"
 	"os/signal"
 	"runtime"
 	"runtime/pprof"
 	"time"
-	"io"
-	"log"
 )
 
 func ProfileCpu(cpuProfile string) {
