@@ -5,8 +5,12 @@
 package main
 
 import (
-	yag "github.com/blackbass1988/yet_another_pprof_wrapper"
 	"flag"
+	"fmt"
+	"os"
+	"time"
+
+	yag "github.com/blackbass1988/yet_another_pprof_wrapper"
 )
 
 func main() {
@@ -20,13 +24,31 @@ func main() {
 	flag.Parse()
 
 	if cpuProfile != "" {
-		go yag.ProfileCpu(cpuProfile)
+		cWriter, err := os.Create(cpuProfile)
+		if err != nil {
+			panic(err)
+		}
+		go yag.ProfileCpu(cWriter)
 	}
 
 	if heapProfile != "" {
-		go yag.ProfileMemory(heapProfile)
+		mWriter, err := os.Create(heapProfile)
+		if err != nil {
+			panic(err)
+		}
+		go yag.ProfileMemory(mWriter, 10*time.Second, true)
 	}
 
 	//do your stuff
+
+	t := time.NewTicker(100 * time.Millisecond)
+
+	data := make([]bool, 10)
+	for _ = range t.C {
+		data = append(data, true)
+	}
+
+	fmt.Printf("%+v", data)
 }
+
 ```
